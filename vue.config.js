@@ -1,4 +1,4 @@
-module.export = {
+module.exports = {
   publicPath: process.env.Node === 'production' ? './' : '/', // 解决打包上线时，文件路径变为绝对路径，显示空白，线上路径为 './'  不设置时默认为生产环境 '/'
   devServer: {
     host: 'localhost',
