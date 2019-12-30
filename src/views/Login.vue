@@ -18,6 +18,7 @@
 
 <script>
 import { login } from '@/api/user.js'
+import { mapActions } from 'vuex'
 export default {
   name: 'login',
   data () {
@@ -29,19 +30,27 @@ export default {
     }
   },
   methods: {
+    // mapActions 将store中的actions的方法映射到methods中，调用时调用actions中的方法名即可
+    ...mapActions(['SET_USER_SYNC']),
     // 登录操作
     // async await 可以将promise对象拆分成一个普通对象
     async handleLogin () {
       try {
         const data = await login(this.user)
         console.log(data)
-        // 将登陆获取到的token存到本地
+        // 将登陆获取到的token存到本地 vuex
+        // mutations方式
+        // this.$store.commit('SET_USER', data)
+        // actions方式
+        // this.$store.dispatch('SET_USER_SYNC', data)
+        // mapActions方式
+        this.SET_USER_SYNC(data)
         window.sessionStorage.setItem('token', 'Bear ' + data.token)
         // 成功后跳转到首页
         this.$router.push('/')
         this.$toast.success('登录成功')
       } catch (err) {
-        this.$toast.error('登录失败，请重新登录')
+        this.$toast.fail('登录失败，请重新登录')
       }
     }
   }
