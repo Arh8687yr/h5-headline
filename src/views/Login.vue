@@ -38,7 +38,7 @@ export default {
       try {
         const data = await login(this.user)
         console.log(data)
-        // 将登陆获取到的token存到本地 vuex
+        // 将登陆获取到的token存到本地和vuex
         // mutations方式
         // this.$store.commit('SET_USER', data)
         // actions方式
@@ -46,6 +46,7 @@ export default {
         // mapActions方式
         this.SET_USER_SYNC(data)
         window.sessionStorage.setItem('token', 'Bear ' + data.token)
+        console.log(window.sessionStorage.getItem('token'))
         // 成功后跳转到首页
         this.$router.push('/')
         this.$toast.success('登录成功')
