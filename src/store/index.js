@@ -1,16 +1,21 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// 引入本地存储的封装操作
+import * as storageTools from '@/utils/sessionStorage'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     // {token,refresh_token}
-    user: null
+    // 向本地读取用户登录状态
+    user: storageTools.getItem('user')
   },
   mutations: {
     SET_USER (state, user) {
       state.user = user
+      // 把登录状态存储到本地存储
+      storageTools.setItem('user', user)
     }
   },
   actions: {

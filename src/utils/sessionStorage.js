@@ -5,11 +5,11 @@ export const setItem = (key, value) => {
   //   // JSON.stringify 将对象转换为JSON字符串
   //   value = JSON.stringify(value)
   // }
-  return window.sessionStorage.setItem(key, JSON.stringify(value))
+  window.sessionStorage.setItem(key, JSON.stringify(value))
 }
 export const getItem = (key) => {
-  return JSON.parse(window.sessionStorage.setItem(key))
+  return JSON.parse(window.sessionStorage.getItem(key))
 }
-export const removeIten = (key) => {
-  return window.sessionStorage.removeItem(key)
+export const removeItem = (key) => {
+  window.sessionStorage.removeItem(key)
 }
