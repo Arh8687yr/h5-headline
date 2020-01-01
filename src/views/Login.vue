@@ -4,9 +4,29 @@
     <van-nav-bar title="登录" />
     <!-- 登录部分 -->
     <van-cell-group>
-      <van-field v-model="user.mobile" left-icon="phone" placeholder="请输入手机号"></van-field>
-      <van-field v-model="user.code" left-icon="lock" placeholder="请输入密码">
-        <van-button class="sendCode" slot="button" type="default" size="small">发送验证码</van-button>
+      <!-- 使用VeeValidate校验器
+        1. 通过v-validate设置验证的规则
+        2. 设置文本框的name属性（err时绑定）
+        3. 展示验证错误信息
+      -->
+      <van-field
+        v-validate="'required|digits:11'"
+        name="userMobile"
+        :error-message="errors.first('userMobile')"
+        clearable
+        v-model="user.mobile"
+        left-icon="phone"
+        placeholder="请输入手机号"
+      />
+      <van-field
+        v-validate="'required|digits:6'"
+        name="userCode"
+        :error-message="errors.first('userCode')"
+        v-model="user.code"
+        left-icon="lock"
+        placeholder="请输入密码"
+      >
+        <van-button class="sendCode" slot="button" type="default" size="small">获取验证码</van-button>
       </van-field>
     </van-cell-group>
     <!-- 登录按钮 -->
