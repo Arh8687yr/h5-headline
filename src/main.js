@@ -14,7 +14,10 @@ import '@/style/gulp.css'
 Vue.config.productionTip = false
 
 Vue.use(Vant)
-Vue.use(VeeValidate)
+Vue.use(VeeValidate, {
+  // 文本框中触发验证的事件，默认为input事件
+  events: ''
+})
 // 配置中文
 Validator.localize('zhCN', zhCN)
 new Vue({
