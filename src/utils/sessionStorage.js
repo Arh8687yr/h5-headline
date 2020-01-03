@@ -13,3 +13,6 @@ export const getItem = (key) => {
 export const removeItem = (key) => {
   window.sessionStorage.removeItem(key)
 }
+
+// 存储的区别
+// localStorage存在磁盘中 sessionStorage存在内存中 cookie是服务器请求携带

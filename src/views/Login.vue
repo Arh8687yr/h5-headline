@@ -31,7 +31,13 @@
     </van-cell-group>
     <!-- 登录按钮 -->
     <div class="login_btn">
-      <van-button class="btn" type="info" @click="handleLogin">登录</van-button>
+      <van-button
+        class="btn"
+        @click="handleLogin"
+        :loading="loading"
+        type="info"
+        loading-text="正在登录"
+        >登录</van-button>
     </div>
   </div>
 </template>
@@ -61,7 +67,8 @@ export default {
             digits: '请正确输入验证码'
           }
         }
-      }
+      },
+      loading: false
     }
   },
   created () {
@@ -74,11 +81,16 @@ export default {
     // 登录操作
     // async await 可以将promise对象拆分成一个普通对象
     async handleLogin () {
+      this.loading = true
+      console.log(this.loading)
       try {
         // 表单验证
+        // validate() 返回的是一个promise对象，所以可以使用async await 来减少嵌套
+        // const valid = await this.$validator.validate()
         this.$validator.validate().then(async (valid) => {
           // 验证不通过
           if (!valid) {
+            this.loading = false
             return
           }
           const data = await login(this.user)
@@ -99,6 +111,7 @@ export default {
       } catch (err) {
         this.$toast.fail('登录失败，请重新登录')
       }
+      this.loading = false
     }
   }
 }
