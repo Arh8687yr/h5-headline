@@ -1,20 +1,38 @@
+import Tabbar from '@/views/Tabbar.vue'
+import Home from '@/views/home'
 const routes = [
   {
+    // 首页
     path: '/',
-    redirect: '/home'
+    component: Tabbar,
+    children: [
+      {
+        path: '',
+        name: 'home',
+        component: Home
+      },
+      {
+        path: '/qa',
+        name: 'qa',
+        component: () => import('@/views/home/Qa.vue')
+      },
+      {
+        path: '/video',
+        name: 'video',
+        component: () => import('@/views/home/Video.vue')
+      },
+      {
+        path: '/user',
+        name: 'user',
+        component: () => import('@/views/home/User.vue')
+      }
+    ]
   },
   {
     // 登录页
     path: '/login',
     name: 'login',
     component: () => import('@/views/Login.vue')
-  },
-  {
-    // 首页
-    path: '/home',
-    name: 'home',
-    component: () => import('@/views/Home.vue')
-
   }
 ]
 export default routes
