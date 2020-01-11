@@ -9,7 +9,9 @@ module.exports = {
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // camelcase强制使用驼峰命名法，0 禁用，1 不符合警告，2 不符合报错
+    "camelcase": 0
   },
   parserOptions: {
     parser: 'babel-eslint'
