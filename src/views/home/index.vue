@@ -2,30 +2,29 @@
 <template>
   <div>
     <!-- 导航头 -->
-    <van-nav-bar
-      fixed
-      title="黑马头条"
-    />
+    <van-nav-bar fixed title="黑马头条" />
     <!-- 频道列表 -->
     <van-tabs animated v-model="activeIndex">
       <!-- 遍历标签页，显示频道列表 -->
-      <van-tab
-        v-for="channel in channels"
-        :title="channel.name"
-        :key="channel.id">
-        <!-- 文章列表,不同的标签页下有不同的列表 -->
-        <van-list
-          v-model="currentChannel.loading"
-          :finished="currentChannel.finished"
-          finished-text="没有更多了"
-          @load="onLoad"
+      <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
+        <!-- 下拉加载最新数据 -->
+        <van-pull-refresh v-model="currentChannel.pullLoading" @refresh="onRefresh"
+        :success-text="successText"
         >
-          <van-cell
-            v-for="article in currentChannel.articles"
-            :key="article.art_id.toString()"
-            :title="article.title"
-          />
-        </van-list>
+          <!-- 文章列表,不同的标签页下有不同的列表 -->
+          <van-list
+            v-model="currentChannel.loading"
+            :finished="currentChannel.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <van-cell
+              v-for="article in currentChannel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title"
+            />
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -40,13 +39,12 @@ export default {
     return {
       // 列表用的数据
       list: [],
-      loading: false,
-      finished: false,
       // 频道列表
       channels: [],
       // tab是组件中默认显示的tab项的索引
       // 通过该index，可以找到当前的频道对象
-      activeIndex: 0
+      activeIndex: 0,
+      successText: ''
     }
   },
   created () {
@@ -65,11 +63,14 @@ export default {
       try {
         const data = await getChannels()
         // 给所有的频道设置，时间戳和文章数组
-        data.channels.forEach((channel) => {
+        data.channels.forEach(channel => {
           channel.timestamp = null
           channel.articles = []
+          // 上拉加载
           channel.loading = false
           channel.finished = false
+          // 下拉加载
+          channel.pullLoading = false
         })
         this.channels = data.channels
       } catch (err) {
@@ -100,6 +101,26 @@ export default {
       console.log(this.currentChannel.articles)
       // 当前频道数据全部加载完成
       this.currentChannel.loading = false
+    },
+    // 下拉刷新组件
+    async onRefresh () {
+      try {
+        const params = {
+          // 频道的id
+          channel_id: this.currentChannel.id,
+          // 时间戳
+          timestamp: Date.now(),
+          // 是否包含置顶1，0不包含
+          with_top: 1
+        }
+        const data = await getArticles(params)
+        // 设置加载完毕
+        this.currentChannel.pullLoading = false
+        this.currentChannel.articles.unshift(...data.results)
+        this.successText = `不错哦，成功加载了${data.results.length}条数据！`
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
