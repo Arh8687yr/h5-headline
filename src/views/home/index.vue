@@ -8,8 +8,10 @@
       <!-- 遍历标签页，显示频道列表 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉加载最新数据 -->
-        <van-pull-refresh v-model="currentChannel.pullLoading" @refresh="onRefresh"
-        :success-text="successText"
+        <van-pull-refresh
+          v-model="currentChannel.pullLoading"
+          @refresh="onRefresh"
+          :success-text="successText"
         >
           <!-- 文章列表,不同的标签页下有不同的列表 -->
           <van-list
@@ -22,7 +24,17 @@
               v-for="article in currentChannel.articles"
               :key="article.art_id.toString()"
               :title="article.title"
-            />
+            >
+              <!-- 封面文章信息 -->
+              <div slot="label">
+                <p class="label">
+                  <span>{{article.aut_name}}</span>
+                  <span>{{article.comm_count}}评论</span>
+                  <span>{{article.pubdate}}</span>
+                  <span class="close">x</span>
+                </p>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -138,6 +150,16 @@ export default {
   /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
+  }
+}
+.label {
+  clear: both;
+  span {
+    float:left;
+    margin-right: 1rem;
+  }
+  .close {
+    float: right;
   }
 }
 </style>
