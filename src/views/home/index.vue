@@ -27,6 +27,16 @@
             >
               <!-- 封面文章信息 -->
               <div slot="label">
+                <!-- 显示封面图片 -->
+                <van-grid
+                v-if="article.cover.type"
+                :border="false"
+                :column-num="3"
+                >
+                  <van-grid-item v-for="(img,index) in article.cover.images" :key="img + index">
+                    <van-image height="80" :src="img" />
+                  </van-grid-item>
+                </van-grid>
                 <p class="label">
                   <span>{{article.aut_name}}</span>
                   <span>{{article.comm_count}}评论</span>
@@ -86,7 +96,7 @@ export default {
         })
         this.channels = data.channels
       } catch (err) {
-        console.log(err)
+        // console.log(err)
       }
     },
     // list组件的load
@@ -110,7 +120,7 @@ export default {
       this.currentChannel.timestamp = data.pre_timestamp
       // [[], []]
       this.currentChannel.articles.push(...data.results)
-      console.log(this.currentChannel.articles)
+      // console.log(this.currentChannel.articles)
       // 当前频道数据全部加载完成
       this.currentChannel.loading = false
     },
@@ -155,7 +165,7 @@ export default {
 .label {
   clear: both;
   span {
-    float:left;
+    float: left;
     margin-right: 1rem;
   }
   .close {
