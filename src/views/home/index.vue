@@ -34,7 +34,12 @@
                 :column-num="3"
                 >
                   <van-grid-item v-for="(img,index) in article.cover.images" :key="img + index">
-                    <van-image height="80" :src="img" />
+                      <van-image lazy-load height="80" :src="img">
+                      <!-- 图片加载提示 -->
+                      <template v-slot:loading>
+                        <van-loading type="spinner" saze="20" />
+                      </template>
+                    </van-image>
                   </van-grid-item>
                 </van-grid>
                 <p class="label">
@@ -55,6 +60,11 @@
 <script>
 import { getChannels } from '@/api/channel'
 import { getArticles } from '@/api/article'
+import Vue from 'vue'
+// 图片的懒加载  需要单独引入
+import { Lazyload } from 'vant'
+
+Vue.use(Lazyload)
 export default {
   name: 'Home',
   data () {
