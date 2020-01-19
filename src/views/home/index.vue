@@ -45,7 +45,7 @@
                 <p class="label">
                   <span>{{article.aut_name}}</span>
                   <span>{{article.comm_count}}评论</span>
-                  <span>{{article.pubdate}}</span>
+                  <span>{{article.pubdate | fmtDate}}</span>
                   <span class="close">x</span>
                 </p>
               </div>
@@ -63,6 +63,7 @@ import { getArticles } from '@/api/article'
 import Vue from 'vue'
 // 图片的懒加载  需要单独引入
 import { Lazyload } from 'vant'
+import { fmtDate } from '@/utils/day.js'
 
 Vue.use(Lazyload)
 export default {
@@ -154,7 +155,8 @@ export default {
         console.log(err)
       }
     }
-  }
+  },
+  filters: { 'fmtDate': fmtDate }
 }
 </script>
 

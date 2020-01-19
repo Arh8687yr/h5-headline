@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^3.4.3",
+    "dayjs": "^1.8.19",
     "json-bigint": "^0.3.0",
     "vant": "^2.3.3",
     "vee-validate": "^2.2.15",
