@@ -54,6 +54,8 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <!-- 点击'x'更多操作 -->
+    <more-action></more-action>
   </div>
 </template>
 
@@ -64,10 +66,14 @@ import Vue from 'vue'
 // 图片的懒加载  需要单独引入
 import { Lazyload } from 'vant'
 import { fmtDate } from '@/utils/day.js'
-
+// 点击'x'的更多操作
+import MoreAction from './components/MoreAction'
 Vue.use(Lazyload)
 export default {
   name: 'Home',
+  components: {
+    MoreAction
+  },
   data () {
     return {
       // 列表用的数据
