@@ -46,7 +46,7 @@
                   <span>{{article.aut_name}}</span>
                   <span>{{article.comm_count}}评论</span>
                   <span>{{article.pubdate | fmtDate}}</span>
-                  <span class="close">x</span>
+                  <span class="close" @click="showMoreAction=true">x</span>
                 </p>
               </div>
             </van-cell>
@@ -55,7 +55,15 @@
       </van-tab>
     </van-tabs>
     <!-- 点击'x'更多操作 -->
-    <more-action></more-action>
+    <!-- v-model: 等价于
+            v-bind:value="showMoreAction"
+            v-on:input="showMoreAction = $event"
+     -->
+     <!--
+       v-bind单向绑定value值，此时的value需要在子组件中通过props['value']获取
+       此时子组件触发父组件v-model注册的自定义事件（input），要想改变父组件的值，需要通过$emit将更改状态传给父组件
+      -->
+    <more-action v-model="showMoreAction"></more-action>
   </div>
 </template>
 
@@ -83,7 +91,8 @@ export default {
       // tab是组件中默认显示的tab项的索引
       // 通过该index，可以找到当前的频道对象
       activeIndex: 0,
-      successText: ''
+      successText: '',
+      showMoreAction: false
     }
   },
   created () {
