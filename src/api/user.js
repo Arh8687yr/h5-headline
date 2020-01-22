@@ -13,3 +13,10 @@ export const login = ({
     code
   })
 }
+
+// 拉黑作者
+export const blackLists = (aut_id) => {
+  return axios.post('/app/v1_0/user/blacklists', {
+    target: aut_id
+  })
+}

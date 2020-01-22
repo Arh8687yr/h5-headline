@@ -26,6 +26,7 @@
 
 <script>
 import { dislikeArt } from '@/api/article'
+import { blackLists } from '@/api/user'
 export default {
   name: 'moreAction',
   // 控制弹出框显隐,
@@ -69,8 +70,15 @@ export default {
       }
     },
     // 拉黑作者
-    handleBlackList () {
-
+    async handleBlackList () {
+      try {
+        await blackLists(this.article.aut_id)
+        this.$toast.success('操作成功')
+        // 操作成功后，通知父组件，父组件隐藏弹出层，并且将该作者所有的文章从列表中删除
+        this.$emit('handleBlackList')
+      } catch (err) {
+        this.$toast.fail('操作失败')
+      }
     }
   }
 }

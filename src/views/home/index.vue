@@ -60,7 +60,7 @@
        v-bind单向绑定value值，此时的value需要在子组件中通过props['value']获取
        此时子组件触发父组件v-model注册的自定义事件（input），要想改变父组件的值，需要通过$emit将更改状态传给父组件
     -->
-    <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike"></more-action>
+    <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike" @handleBlackList="handleBlackList"></more-action>
   </div>
 </template>
 
@@ -185,6 +185,13 @@ export default {
         return article.art_id === this.currentArt.art_id
       })
       currentArtList.splice(currentArtIndex, 1)
+    },
+    // 点击拉黑作者操作成功后
+    handleBlackList () {
+      // 1. 隐藏弹出层
+      this.showMoreAction = false
+      // 2. 并将该作者所有的文章从列表中删除
+      // console.log('blackList')
     }
   },
   filters: { fmtDate: fmtDate }
