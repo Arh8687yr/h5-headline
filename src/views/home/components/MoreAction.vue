@@ -17,15 +17,13 @@
       <van-cell>
         <van-icon name="arrow-left" @click="showReport=false" />
       </van-cell>
-      <van-cell>标题夸张</van-cell>
-      <van-cell>低俗色情</van-cell>
-      <van-cell>错别字多</van-cell>
+      <van-cell v-for="item in reportList" :key="item.type" @click="handleMore('report',item.type)">{{item.title}}</van-cell>
     </van-cell-group>
   </van-dialog>
 </template>
 
 <script>
-import { dislikeArt } from '@/api/article'
+import { dislikeArt, reportArt } from '@/api/article'
 import { blackLists } from '@/api/user'
 export default {
   name: 'moreAction',
@@ -44,18 +42,27 @@ export default {
   data () {
     return {
       // 控制举报内容的显隐
-      showReport: false
+      showReport: false,
+      // 举报列表
+      reportList: [
+        { title: '标题夸张', type: 1 },
+        { title: '低俗色情', type: 2 },
+        { title: '错别字多', type: 3 }
+      ]
     }
   },
   methods: {
     // 操作更多
-    handleMore (handle) {
+    handleMore (handle, reportType) {
       switch (handle) {
         // 点击不感兴趣
         case 'dislike': this.handleDislike()
           break
         // 点击拉黑作者
         case 'blackList': this.handleBlackList()
+          break
+        // 点击举报文章
+        case 'report': this.handleReport(reportType)
       }
     },
     // 不感兴趣
@@ -76,6 +83,17 @@ export default {
         this.$toast.success('操作成功')
         // 操作成功后，通知父组件，父组件隐藏弹出层，并且将该作者所有的文章从列表中删除
         this.$emit('handleBlackList')
+      } catch (err) {
+        this.$toast.fail('操作失败')
+      }
+    },
+    // 举报文章
+    async handleReport (reportType) {
+      try {
+        await reportArt({ target: this.article.art_id, type: reportType })
+        this.$toast.success('举报成功')
+        // 通知父组件隐藏弹出层
+        this.$emit('input', false)
       } catch (err) {
         this.$toast.fail('操作失败')
       }

@@ -19,3 +19,16 @@ export const dislikeArt = (artId) => {
     target: artId
   })
 }
+
+/**
+ * 举报文章：target文章ID type:举报类型 remark:对举报内容的附加说明
+ */
+export const reportArt = ({
+  target,
+  type
+}) => {
+  return axios.post('/app/v1_0/article/reports', {
+    target,
+    type
+  })
+}
