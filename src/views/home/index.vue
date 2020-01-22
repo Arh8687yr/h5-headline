@@ -28,13 +28,9 @@
               <!-- 封面文章信息 -->
               <div slot="label">
                 <!-- 显示封面图片 -->
-                <van-grid
-                v-if="article.cover.type"
-                :border="false"
-                :column-num="3"
-                >
+                <van-grid v-if="article.cover.type" :border="false" :column-num="3">
                   <van-grid-item v-for="(img,index) in article.cover.images" :key="img + index">
-                      <van-image lazy-load height="80" :src="img">
+                    <van-image lazy-load height="80" :src="img">
                       <!-- 图片加载提示 -->
                       <template v-slot:loading>
                         <van-loading type="spinner" saze="20" />
@@ -46,7 +42,8 @@
                   <span>{{article.aut_name}}</span>
                   <span>{{article.comm_count}}评论</span>
                   <span>{{article.pubdate | fmtDate}}</span>
-                  <span class="close" @click="showMoreAction=true">x</span>
+                  <!-- 点击按钮，记录当前文章对象 -->
+                  <span class="close" @click="handelAction(article)">x</span>
                 </p>
               </div>
             </van-cell>
@@ -58,12 +55,12 @@
     <!-- v-model: 等价于
             v-bind:value="showMoreAction"
             v-on:input="showMoreAction = $event"
-     -->
-     <!--
+    -->
+    <!--
        v-bind单向绑定value值，此时的value需要在子组件中通过props['value']获取
        此时子组件触发父组件v-model注册的自定义事件（input），要想改变父组件的值，需要通过$emit将更改状态传给父组件
-      -->
-    <more-action v-model="showMoreAction"></more-action>
+    -->
+    <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike"></more-action>
   </div>
 </template>
 
@@ -92,7 +89,9 @@ export default {
       // 通过该index，可以找到当前的频道对象
       activeIndex: 0,
       successText: '',
-      showMoreAction: false
+      showMoreAction: false,
+      // 点击“x”时记录的当前的文章对象
+      currentArt: null
     }
   },
   created () {
@@ -113,6 +112,7 @@ export default {
         // 给所有的频道设置，时间戳和文章数组
         data.channels.forEach(channel => {
           channel.timestamp = null
+          // 当前频道的文章列表
           channel.articles = []
           // 上拉加载
           channel.loading = false
@@ -169,9 +169,25 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    // 点击"X"按钮，弹出moreAction，并记录当前的文章对象
+    handelAction (article) {
+      this.showMoreAction = true
+      this.currentArt = article
+    },
+    // 点击不感兴趣操作成功后
+    handleDislike () {
+      // 1. 隐藏弹出层
+      this.showMoreAction = false
+      // 2. 并将该条文章从列表中删除(找到文章索引)
+      const currentArtList = this.currentChannel.articles
+      const currentArtIndex = currentArtList.findIndex((article) => {
+        return article.art_id === this.currentArt.art_id
+      })
+      currentArtList.splice(currentArtIndex, 1)
     }
   },
-  filters: { 'fmtDate': fmtDate }
+  filters: { fmtDate: fmtDate }
 }
 </script>
 

@@ -10,3 +10,12 @@ export const getArticles = (params) => {
     params
   })
 }
+
+/**
+ * 不喜欢文章
+ */
+export const dislikeArt = (artId) => {
+  return axios.post('app/v1_0/article/dislikes', {
+    target: artId
+  })
+}
