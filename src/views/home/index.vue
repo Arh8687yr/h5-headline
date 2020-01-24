@@ -73,6 +73,7 @@ import { Lazyload } from 'vant'
 import { fmtDate } from '@/utils/day.js'
 // 点击'x'的更多操作
 import MoreAction from './components/MoreAction'
+import { setItem, getItem } from '@/utils/sessionStorage'
 Vue.use(Lazyload)
 export default {
   name: 'Home',
@@ -108,9 +109,22 @@ export default {
     // 加载频道列表
     async loadChannels () {
       try {
+        let channels = []
+        // 1. 如果登录，发送请求获取用户自己的频道列表
+        if (this.$store.state.user) {
+          const data = await getChannels()
+          channels = data.channels
+        }
+        // 2. 如果没有登录，从本地获取，
+        if (getItem('channels')) {
+          channels = getItem('channels')
+        }
+        // 3. 如果本地没有，发送请求获取，并保存到本地
         const data = await getChannels()
+        channels = data.channels
+        setItem('channels', channels)
         // 给所有的频道设置，时间戳和文章数组
-        data.channels.forEach(channel => {
+        channels.forEach(channel => {
           channel.timestamp = null
           // 当前频道的文章列表
           channel.articles = []
@@ -120,7 +134,7 @@ export default {
           // 下拉加载
           channel.pullLoading = false
         })
-        this.channels = data.channels
+        this.channels = channels
       } catch (err) {
         // console.log(err)
       }
