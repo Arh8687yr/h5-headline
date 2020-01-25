@@ -63,7 +63,8 @@
        此时子组件触发父组件v-model注册的自定义事件（input），要想改变父组件的值，需要通过$emit将更改状态传给父组件
     -->
     <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike" @handleBlackList="handleBlackList"></more-action>
-    <channel-edit v-model="showChannelEdit"></channel-edit>
+    <!-- 频道编辑组件 -->
+    <channel-edit :channels="channels" v-model="showChannelEdit"></channel-edit>
   </div>
 </template>
 

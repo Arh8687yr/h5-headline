@@ -11,7 +11,7 @@
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
-      <van-grid-item v-for="item in 8" :key="item" text="文字">
+      <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name">
         <!-- 通过默认的slot default实现的 -->
         <van-icon slot="icon" class="close-icon" name="close" v-show="isEdit"/>
       </van-grid-item>
@@ -30,6 +30,10 @@ export default {
   props: {
     value: {
       type: Boolean,
+      required: true
+    },
+    channels: {
+      type: Array,
       required: true
     }
   },
