@@ -5,6 +5,8 @@
     <van-nav-bar fixed title="黑马头条" />
     <!-- 频道列表 -->
     <van-tabs animated v-model="activeIndex">
+      <!-- 频道编辑 -->
+      <van-icon @click="showChannelEdit=true" name="wap-nav" slot="nav-right" class="wap-nav" />
       <!-- 遍历标签页，显示频道列表 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉加载最新数据 -->
@@ -61,6 +63,7 @@
        此时子组件触发父组件v-model注册的自定义事件（input），要想改变父组件的值，需要通过$emit将更改状态传给父组件
     -->
     <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike" @handleBlackList="handleBlackList"></more-action>
+    <channel-edit v-model="showChannelEdit"></channel-edit>
   </div>
 </template>
 
@@ -73,12 +76,15 @@ import { Lazyload } from 'vant'
 import { fmtDate } from '@/utils/day.js'
 // 点击'x'的更多操作
 import MoreAction from './components/MoreAction'
+// 点击按钮弹出频道编辑
+import ChannelEdit from './components/ChannelEdit'
 import { setItem, getItem } from '@/utils/sessionStorage'
 Vue.use(Lazyload)
 export default {
   name: 'Home',
   components: {
-    MoreAction
+    MoreAction,
+    ChannelEdit
   },
   data () {
     return {
@@ -92,7 +98,9 @@ export default {
       successText: '',
       showMoreAction: false,
       // 点击“x”时记录的当前的文章对象
-      currentArt: null
+      currentArt: null,
+      // 控制频道编辑的弹出层显隐
+      showChannelEdit: false
     }
   },
   created () {
@@ -224,6 +232,15 @@ export default {
   /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
+  }
+  .wap-nav {
+    position: fixed;
+    right: 5px;
+    text-align: center;
+    line-height: 44px;
+    background-color: #fff;
+    opacity: 0.8;
+    font-size: 20px;
   }
 }
 .label {
