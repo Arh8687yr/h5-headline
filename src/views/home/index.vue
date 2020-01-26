@@ -64,7 +64,7 @@
     -->
     <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike" @handleBlackList="handleBlackList"></more-action>
     <!-- 频道编辑组件 -->
-    <channel-edit :channels="channels" v-model="showChannelEdit"></channel-edit>
+    <channel-edit :activeIndex="activeIndex" :channels="channels" v-model="showChannelEdit"></channel-edit>
   </div>
 </template>
 

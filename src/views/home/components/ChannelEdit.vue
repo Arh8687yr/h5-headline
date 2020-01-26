@@ -11,7 +11,8 @@
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
-      <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name">
+      <van-grid-item v-for="(channel,index) in channels" :key="channel.id">
+        <div slot="text" class="van-grid-item__text" :class="{active:activeIndex === index}">{{channel.name}}</div>
         <!-- 通过默认的slot default实现的 -->
         <van-icon slot="icon" class="close-icon" name="close" v-show="isEdit" />
       </van-grid-item>
@@ -39,6 +40,10 @@ export default {
     },
     channels: {
       type: Array,
+      required: true
+    },
+    activeIndex: {
+      type: Number,
       required: true
     }
   },
@@ -86,5 +91,9 @@ export default {
   position: absolute;
   right: -47px;
   top: -15px;
+}
+.active {
+  color: red;
+  font-weight: bold;
 }
 </style>
