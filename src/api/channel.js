@@ -15,3 +15,10 @@ export const getChannels = () => {
 export const getAllChannels = () => {
   return axios.get('/app/v1_0/channels')
 }
+
+/**
+ * 删除用户的指定频道
+ */
+export const delChannel = (id) => {
+  return axios.delete(`/app/v1_0/user/channels/${id}`)
+}

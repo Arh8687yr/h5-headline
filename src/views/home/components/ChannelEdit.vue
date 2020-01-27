@@ -11,10 +11,10 @@
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
-      <van-grid-item v-for="(channel,index) in channels" :key="channel.id">
+      <van-grid-item v-for="(channel,index) in channels" :key="channel.id" @click="handleEdit(index,channel.id)">
         <div slot="text" class="van-grid-item__text" :class="{active:activeIndex === index}">{{channel.name}}</div>
         <!-- 通过默认的slot default实现的 -->
-        <van-icon slot="icon" class="close-icon" name="close" v-show="isEdit" />
+        <van-icon slot="icon" class="close-icon" name="close" v-show="isEdit && index != 0" />
       </van-grid-item>
     </van-grid>
     <van-cell title="推荐频道" label="点击添加频道" />
@@ -30,7 +30,9 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannels, delChannel } from '@/api/channel'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/sessionStorage'
 export default {
   name: 'channelEdit',
   props: {
@@ -56,6 +58,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     // 推荐频道
     recommendChannels () {
       // 1. 获取我的频道中所有id组成的数组
@@ -78,6 +81,29 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    async handleEdit (index, channelId) {
+      // 1. 如果不是编辑模式，点击频道后将弹出层关闭，并将当前频道展示为点击的频道
+      if (!this.isEdit) {
+        this.$emit('activeChange', index)
+        return
+      }
+      // 2. 如果是编辑模式，
+      // 2.1 点击按钮将频道从我的频道移除
+      // 父组件传给子组件的channels对象，使得两个组件指向同一个地址，子组件可以修改对象的属性，但是不可以重新给对象赋值
+      this.channels.splice(index, 1)
+      // 2.2 判断是否登录
+      if (this.user) {
+      // 如果登录，发送请求，
+        try {
+          await delChannel(channelId)
+        } catch (err) {
+          this.$toast.fail('请求失败')
+        }
+        return
+      }
+      //  如果没有登录，将频道列表记录到本地存储
+      setItem('channels', this.channels)
     }
   },
   created () {

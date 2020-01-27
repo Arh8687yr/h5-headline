@@ -64,7 +64,7 @@
     -->
     <more-action v-if="currentArt" :article="currentArt" v-model="showMoreAction" @handleDislike="handleDislike" @handleBlackList="handleBlackList"></more-action>
     <!-- 频道编辑组件 -->
-    <channel-edit :activeIndex="activeIndex" :channels="channels" v-model="showChannelEdit"></channel-edit>
+    <channel-edit @activeChange="activeChange" :activeIndex="activeIndex" :channels="channels" v-model="showChannelEdit"></channel-edit>
   </div>
 </template>
 
@@ -123,15 +123,17 @@ export default {
         if (this.$store.state.user) {
           const data = await getChannels()
           channels = data.channels
+        } else {
+          // 2. 如果没有登录，从本地获取，
+          if (getItem('channels')) {
+            channels = getItem('channels')
+          } else {
+            // 3. 如果本地没有，发送请求获取，并保存到本地
+            const data = await getChannels()
+            channels = data.channels
+            setItem('channels', channels)
+          }
         }
-        // 2. 如果没有登录，从本地获取，
-        if (getItem('channels')) {
-          channels = getItem('channels')
-        }
-        // 3. 如果本地没有，发送请求获取，并保存到本地
-        const data = await getChannels()
-        channels = data.channels
-        setItem('channels', channels)
         // 给所有的频道设置，时间戳和文章数组
         channels.forEach(channel => {
           channel.timestamp = null
@@ -215,6 +217,11 @@ export default {
       this.showMoreAction = false
       // 2. 并将该作者所有的文章从列表中删除
       // console.log('blackList')
+    },
+    // 点击我的频道跳转到对应频道
+    activeChange (index) {
+      this.activeIndex = index
+      this.showChannelEdit = false
     }
   },
   filters: { fmtDate: fmtDate }
