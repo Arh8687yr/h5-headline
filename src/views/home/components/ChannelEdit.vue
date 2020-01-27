@@ -11,8 +11,16 @@
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
-      <van-grid-item v-for="(channel,index) in channels" :key="channel.id" @click="handleEdit(index,channel.id)">
-        <div slot="text" class="van-grid-item__text" :class="{active:activeIndex === index}">{{channel.name}}</div>
+      <van-grid-item
+        v-for="(channel,index) in channels"
+        :key="channel.id"
+        @click="handleEdit(index,channel.id)"
+      >
+        <div
+          slot="text"
+          class="van-grid-item__text"
+          :class="{active:activeIndex === index}"
+        >{{channel.name}}</div>
         <!-- 通过默认的slot default实现的 -->
         <van-icon slot="icon" class="close-icon" name="close" v-show="isEdit && index != 0" />
       </van-grid-item>
@@ -20,6 +28,7 @@
     <van-cell title="推荐频道" label="点击添加频道" />
     <van-grid>
       <van-grid-item
+        @click="handleChannelItem(allChannel)"
         v-for="allChannel in recommendChannels"
         :key="allChannel.id"
         :text="allChannel.name"
@@ -30,7 +39,7 @@
 </template>
 
 <script>
-import { getAllChannels, delChannel } from '@/api/channel'
+import { getAllChannels, delChannel, addChannel } from '@/api/channel'
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/sessionStorage'
 export default {
@@ -82,6 +91,7 @@ export default {
         console.log(err)
       }
     },
+    // 点击我的频道
     async handleEdit (index, channelId) {
       // 1. 如果不是编辑模式，点击频道后将弹出层关闭，并将当前频道展示为点击的频道
       if (!this.isEdit) {
@@ -94,7 +104,7 @@ export default {
       this.channels.splice(index, 1)
       // 2.2 判断是否登录
       if (this.user) {
-      // 如果登录，发送请求，
+        // 如果登录，发送请求，
         try {
           await delChannel(channelId)
         } catch (err) {
@@ -104,6 +114,31 @@ export default {
       }
       //  如果没有登录，将频道列表记录到本地存储
       setItem('channels', this.channels)
+    },
+    // 点击推荐频道
+    async handleChannelItem (channel) {
+      // console.log(channel)
+      // 此时的channel是在vue实例挂载之后动态增加的，没有响应式属性，所以要为其增加响应式属性
+      // this.$set(响应式对象，响应式属性，属性的初始值)
+      this.$set(channel, 'timestamp', null)
+      this.$set(channel, 'articles', [])
+      this.$set(channel, 'loading', false)
+      this.$set(channel, 'finished', false)
+      this.$set(channel, 'pullLoading', false)
+      // 1. 将channel添加到我的频道
+      this.channels.push(channel)
+      // 2. 判断是否登录
+      if (this.user) {
+        // 2.1 如果登录，发送请求将频道添加到喜欢的频道列表
+        try {
+          await addChannel(channel.id, this.channels.length)
+        } catch (err) {
+          this.$toast.fail('请求失败')
+        }
+        return
+      }
+      setItem('channels', this.channels)
+      // 2.2 如果没有登录，将修改后的频道保存到本地
     }
   },
   created () {

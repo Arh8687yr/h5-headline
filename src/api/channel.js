@@ -22,3 +22,17 @@ export const getAllChannels = () => {
 export const delChannel = (id) => {
   return axios.delete(`/app/v1_0/user/channels/${id}`)
 }
+
+/**
+ * 添加用户的指定频道
+ * id 频道id seq 当前项的序号
+ */
+export const addChannel = (id, seq) => {
+  return axios.patch('/app/v1_0/user/channels', {
+    channels: [
+      {
+        id, seq
+      }
+    ]
+  })
+}
