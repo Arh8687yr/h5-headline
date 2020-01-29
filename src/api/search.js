@@ -11,3 +11,10 @@ export const getSuggestion = (q) => {
     }
   })
 }
+
+/**
+ * @params {*} 获取用户搜索历史
+ */
+export const userHistory = () => {
+  return axios.get('/app/v1_0/search/histories')
+}
