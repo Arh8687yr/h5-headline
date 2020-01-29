@@ -18,3 +18,10 @@ export const getSuggestion = (q) => {
 export const userHistory = () => {
   return axios.get('/app/v1_0/search/histories')
 }
+
+/**
+ * @params {*} 删除用户搜索历史
+ */
+export const delUserHistory = () => {
+  return axios.delete('/app/v1_0/search/histories')
+}

@@ -27,14 +27,14 @@
         <!-- 自定义右侧内容 -->
         <div>
           <div v-show="isDel" style="display:inline-block">
-            <span>全部删除</span>&nbsp;
+            <span @click="delAllHistory">全部删除</span>&nbsp;
             <span @click="isDel=false">完成</span>&nbsp;
           </div>
           <van-icon @click="isDel=true" v-show="!isDel" name="delete" size="18px" />
         </div>
       </van-cell>
-      <van-cell v-for="history in historyList" :key="history" :title="history">
-        <van-icon v-show="isDel" name="cross" size="16px" />
+      <van-cell v-for="(history,index) in historyList" :key="history" :title="history">
+        <van-icon @click="delHistory(index)" v-show="isDel" name="cross" size="16px" />
       </van-cell>
     </van-cell-group>
   </div>
@@ -75,6 +75,7 @@ export default {
       // 没有登录，把历史记录存储到本地
       storageTools.setItem('history', this.historyList)
     },
+    // 用户点击取消按钮
     onCancel () {},
     async onInput () {
       if (this.value.length === 0) return
@@ -84,6 +85,23 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    // 用户点击删除搜索历史
+    delHistory (index) {
+      // 判断用户是否登录
+      if (this.user) {
+      // 如果登录，发送请求，从用户搜索历史中删除，并从界面移除此项
+        this.historyList.splice(index, 1)
+        return
+      }
+      // 如果没有登录，从本地删除此项，并从界面移除
+      this.historyList.splice(index, 1)
+      storageTools.setItem('history', this.historyList)
+    },
+    // 用户点击全部删除
+    delAllHistory () {
+      this.historyList = []
+      storageTools.setItem('history', this.historyList)
     },
     async onLoad () {
       // 获取历史搜索，判断用户是否登录
