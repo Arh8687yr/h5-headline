@@ -17,9 +17,12 @@
         @click="onSearch(suggestion)"
         v-for="suggestion in suggestionList"
         :key="suggestion"
-        :title="suggestion"
         icon="search"
-      />
+      >
+      <!-- 此形式会将便签转义成字符串然后直接渲染到页面上，只有v-html才能将标签渲染 -->
+        <!-- <div slot="title">{{ highLight(suggestion) }}</div> -->
+        <div slot="title" v-html="highLight(suggestion)"></div>
+      </van-cell>
     </van-cell-group>
     <!-- 历史记录 -->
     <van-cell-group v-show="!value">
@@ -102,6 +105,12 @@ export default {
     delAllHistory () {
       this.historyList = []
       storageTools.setItem('history', this.historyList)
+    },
+    // 高亮显示搜索项
+    highLight (suggestion) {
+      // g 全局 i 不区分大小写
+      const reg = new RegExp(this.value, 'gi')
+      return suggestion.replace(reg, `<span style="color:red">${this.value}</span>`)
     },
     async onLoad () {
       // 获取历史搜索，判断用户是否登录
