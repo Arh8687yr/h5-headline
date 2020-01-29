@@ -33,6 +33,12 @@ const routes = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/Login.vue')
+  },
+  // 搜索页
+  {
+    path: '/search',
+    name: 'search',
+    component: () => import('@/views/Search.vue')
   }
 ]
 export default routes
