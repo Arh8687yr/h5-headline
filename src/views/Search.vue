@@ -36,7 +36,7 @@
           <van-icon @click="isDel=true" v-show="!isDel" name="delete" size="18px" />
         </div>
       </van-cell>
-      <van-cell v-for="(history,index) in historyList" :key="history" :title="history">
+      <van-cell v-for="(history,index) in historyList" :key="history" :title="history" @click="onSearch(history)">
         <van-icon @click="delHistory(index)" v-show="isDel" name="cross" size="16px" />
       </van-cell>
     </van-cell-group>
@@ -65,6 +65,13 @@ export default {
   methods: {
     // 点击回车或者点击搜索项的时候，将内容存到历史搜索中
     onSearch (search) {
+      // 点击搜索跳转到搜索结果页
+      this.$router.push({
+        name: 'searchResult',
+        params: {
+          q: search
+        }
+      })
       // 在添加以前筛选重复内容
       if (this.historyList.includes(search)) {
         return

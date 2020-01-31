@@ -39,6 +39,14 @@ const routes = [
     path: '/search',
     name: 'search',
     component: () => import('@/views/Search.vue')
+  },
+  // 搜索结果页
+  {
+    path: '/searchResult/:q',
+    name: 'searchResult',
+    // 通过props传递动态参数
+    props: true,
+    component: () => import('@/views/SearchResult.vue')
   }
 ]
 export default routes
