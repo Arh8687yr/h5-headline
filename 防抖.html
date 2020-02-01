@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>函数防抖的实现</title>
+</head>
+
+<body>
+  <script>
+    // 模拟函数防抖的实现
+    // 函数：1. 作用 2. 参数 3. 返回值
+    function debounce(fn, delay) {
+      // 记录上一次定时器的id
+      var timerId // 闭包，内层函数访问外部变量会形成闭包，此时的外部变量会被永久保存下来
+      return function () {
+        // 清除上一个定时器
+        clearTimeout(timerId)
+        // 开启一个新的定时器
+        timerId = setTimeout(() => {
+          // 此时定时器中的this指向windows
+          // console.log(this) // windows
+          // fn()
+          fn.apply(this, arguments)
+          // 此时的this 是函数调用者也就是fn()
+        }, delay)
+      }
+    }
+
+    let fn = debounce(fn => {
+      console.log('debounce')
+    }, 3000)
+
+    // 只执行一次
+    fn()
+    fn()
+    fn()
+    fn()
+  </script>
+</body>
+
+</html>
