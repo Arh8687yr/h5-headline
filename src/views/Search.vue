@@ -87,7 +87,9 @@ export default {
       storageTools.setItem('history', this.historyList)
     },
     // 用户点击取消按钮
-    onCancel () {},
+    onCancel () {
+      this.$router.push('/')
+    },
     // 用户输入时
     onInput: debounce(async function () {
       if (this.value.length === 0) return

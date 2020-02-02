@@ -2,7 +2,9 @@
 <template>
   <div>
     <!-- 导航头 -->
-    <van-nav-bar fixed title="黑马头条" />
+    <van-nav-bar fixed title="黑马头条">
+        <van-icon name="search" slot="right" @click="search"/>
+    </van-nav-bar>
     <!-- 频道列表 -->
     <van-tabs animated v-model="activeIndex">
       <!-- 频道编辑 -->
@@ -222,6 +224,9 @@ export default {
     activeChange (index) {
       this.activeIndex = index
       this.showChannelEdit = false
+    },
+    search () {
+      this.$router.push('/search')
     }
   },
   filters: { fmtDate: fmtDate }
