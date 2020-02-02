@@ -46,6 +46,7 @@
 <script>
 import { getSuggestion, userHistory } from '@/api/search'
 import { mapState } from 'vuex'
+import { debounce } from '@/utils/debounce'
 import * as storageTools from '@/utils/sessionStorage'
 export default {
   name: 'search',
@@ -87,7 +88,8 @@ export default {
     },
     // 用户点击取消按钮
     onCancel () {},
-    async onInput () {
+    // 用户输入时
+    onInput: debounce(async function () {
       if (this.value.length === 0) return
       try {
         const data = await getSuggestion(this.value)
@@ -95,7 +97,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    },
+    }, 300),
     // 用户点击删除搜索历史
     delHistory (index) {
       // 判断用户是否登录
