@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>函数防抖的实现</title>
+  <title>函数节流的实现</title>
 </head>
 
 <body>
   <script>
-    // 模拟函数防抖的实现 时间到达执行一次
+    // 模拟函数节流的实现 先执行一次，时间到达再执行一次
     // 函数：1. 作用 2. 参数 3. 返回值
     function debounce(fn, delay) {
       // 记录上一次定时器的id
@@ -29,39 +29,15 @@
       }
     }
 
-    // let fn = debounce(fn => {
-    //   console.log('debounce')
-    // }, 3000)
+    let fn = debounce(fn => {
+      console.log('debounce')
+    }, 3000)
 
     // 只执行一次
-    // fn()
-    // fn()
-    // fn()
-    // fn()
-
-    // var obj = {
-    //   name:'nezha',
-    //   say: function(a,b) {
-    //     console.log(a+b)
-    //     console.log(this)
-    //   }
-    // }
-    // 普通方法调用obj.say
-    // obj.say(1,2) // 3 obj
-
-    // 在debounce中频繁调用obj.say
-    // var f1 = debounce(obj.say,100)
-    // f1(1,2) // 3 windows
-
-    var obj = {
-      name:'nezha',
-      say: debounce(function(a,b) {
-        console.log(a+b)
-        console.log(this)
-      })
-    }
-
-    obj.say(1,2)
+    fn()
+    fn()
+    fn()
+    fn()
   </script>
 </body>
 
