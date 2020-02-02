@@ -10,34 +10,27 @@
 
 <body>
   <script>
-    // 模拟函数节流的实现 先执行一次，时间到达再执行一次
+    // 模拟函数节流的实现 让函数在指定时间内只执行一次，时间到达再执行一次，只要时间到达就会执行
     // 函数：1. 作用 2. 参数 3. 返回值
-    function debounce(fn, delay) {
-      // 记录上一次定时器的id
-      var timerId // 闭包，内层函数访问外部变量会形成闭包，此时的外部变量会被永久保存下来
+    function throttle(fn, delay) {
+      // 当前时间，是否 > = 最后一次调用的时间+delay
+      var timeId, last
       return function () {
-        // 清除上一个定时器
-        clearTimeout(timerId)
-        // 开启一个新的定时器
-        timerId = setTimeout(() => {
-          // 此时定时器中的this指向windows
-          // console.log(this) // windows
-          // fn()
+        var now = Date.now()
+        // 判断时间是否到达
+        if (last && now < last + delay) {
+          // 时间没有到达，开启定时器延时执行
+          clearTimeout(timeId)
+          timeId = setTimeout(() => {
+            fn.apply(this, arguments)
+          }, delay)
+        } else {
+          // 时间到达，或者是第一次调用（last没有值）
+          last = now
           fn.apply(this, arguments)
-          // 此时的this 是函数调用者也就是fn()
-        }, delay)
+        }
       }
     }
-
-    let fn = debounce(fn => {
-      console.log('debounce')
-    }, 3000)
-
-    // 只执行一次
-    fn()
-    fn()
-    fn()
-    fn()
   </script>
 </body>
 
