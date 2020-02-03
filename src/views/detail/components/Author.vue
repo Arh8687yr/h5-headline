@@ -8,7 +8,12 @@
       </div>
     </div>
     <div>
-      <van-button type="danger" :loading="false">关注</van-button>
+      <!-- 我的方式 -->
+      <!-- <van-button type="danger" :loading="false" @click="handleFollow" v-show="!isFollow">加关注</van-button>
+      <van-button type="danger" :loading="false" @click="cnacleFollow" v-show="isFollow">已关注</van-button> -->
+
+      <!-- 老师方式 -->
+      <van-button type="danger" :loading="loading" @click="handleFollow">{{article.is_followed? '已':''}}关注</van-button>
     </div>
   </div>
 </template>
@@ -16,11 +21,42 @@
 <script>
 // 获取相对时间的过滤器(可在main.js中做全局过滤器使用)
 import { fmtDate } from '@/utils/day.js'
+import { followUser, cancleFollowUser } from '@/api/user'
 export default {
   name: 'author',
   props: ['article'],
+  data () {
+    return {
+      loading: false
+    }
+  },
   filters: {
     fmtDate
+  },
+  methods: {
+    // 点击关注/取消关注按钮
+    async handleFollow () {
+      this.loading = true
+      // 判断是否登录
+      try {
+        // this.article.is_followed = !this.article.is_followed
+        if (this.article.is_followed) {
+        // 用户已经关注 则取消关注
+          await cancleFollowUser(this.article.aut_id)
+          this.article.is_followed = false
+        } else {
+          await followUser(this.article.aut_id)
+          this.article.is_followed = true
+        }
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('操作失败')
+      }
+      this.loading = false
+    }
+  },
+  created () {
+
   }
 }
 </script>
