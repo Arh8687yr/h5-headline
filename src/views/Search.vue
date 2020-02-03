@@ -37,7 +37,8 @@
         </div>
       </van-cell>
       <van-cell v-for="(history,index) in historyList" :key="history" :title="history" @click="onSearch(history)">
-        <van-icon @click="delHistory(index)" v-show="isDel" name="cross" size="16px" />
+        <!-- stop 阻止事件冒泡 -->
+        <van-icon @click.stop="delHistory(index)" v-show="isDel" name="cross" size="16px" />
       </van-cell>
     </van-cell-group>
   </div>

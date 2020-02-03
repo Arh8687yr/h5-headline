@@ -24,10 +24,17 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
+          <!-- 点击文章跳转到文章详情页 -->
             <van-cell
               v-for="article in currentChannel.articles"
               :key="article.art_id.toString()"
               :title="article.title"
+              @click="$router.push({
+                name:'detail',
+                params: {
+                  id: article.art_id.toString()
+                }
+              })"
             >
               <!-- 封面文章信息 -->
               <div slot="label">
@@ -47,7 +54,8 @@
                   <span>{{article.comm_count}}评论</span>
                   <span>{{article.pubdate | fmtDate}}</span>
                   <!-- 点击按钮，记录当前文章对象 -->
-                  <span class="close" @click="handelAction(article)">x</span>
+                  <!-- 阻止事件冒泡 -->
+                  <span class="close" @click.stop="handelAction(article)">x</span>
                 </p>
               </div>
             </van-cell>

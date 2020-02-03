@@ -12,6 +12,14 @@ export const getArticles = (params) => {
 }
 
 /**
+ * 获取文章详情
+ * @param {*} id 获取文章的id
+ */
+export const getArtDetail = (id) => {
+  return axios.get(`/app/v1_0/articles/${id}`)
+}
+
+/**
  * 不喜欢文章
  */
 export const dislikeArt = (artId) => {

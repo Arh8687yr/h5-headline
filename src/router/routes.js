@@ -47,6 +47,13 @@ const routes = [
     // 通过props传递动态参数
     props: true,
     component: () => import('@/views/SearchResult.vue')
+  },
+  // 文章详情页
+  {
+    path: '/detail/:id',
+    name: 'detail',
+    props: true,
+    component: () => import('@/views/detail/index.vue')
   }
 ]
 export default routes
