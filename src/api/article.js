@@ -23,9 +23,17 @@ export const getArtDetail = (id) => {
  * 不喜欢文章
  */
 export const dislikeArt = (artId) => {
-  return axios.post('app/v1_0/article/dislikes', {
+  return axios.post('/app/v1_0/article/dislikes', {
     target: artId
   })
+}
+
+/**
+ * 取消不喜欢文章
+ * @param {*} artId 获取文章的id
+ */
+export const cancleDislike = (artId) => {
+  return axios.delete(`/app/v1_0/article/dislikes/${artId}`)
 }
 
 /**
@@ -39,4 +47,20 @@ export const reportArt = ({
     target,
     type
   })
+}
+
+/**
+ * 点赞 target:文章的ID
+ */
+export const likeArticle = (artId) => {
+  return axios.post('/app/v1_0/article/likings', {
+    target: artId
+  })
+}
+
+/**
+ * 取消点赞 target: 文章的ID
+ */
+export const cancleLike = (artId) => {
+  return axios.delete(`/app/v1_0/article/likings/${artId}`)
 }

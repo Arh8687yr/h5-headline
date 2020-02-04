@@ -10,6 +10,7 @@
       <!-- 文章内容 -->
       <div class="article-content" v-html="article.content"></div>
       <!-- 点赞和取消 -->
+      <like-or-no :article="article"></like-or-no>
     </div>
   </div>
 </template>
@@ -18,11 +19,14 @@
 import { getArtDetail } from '@/api/article'
 // 作者信息
 import author from './components/Author'
+// 点赞和取消
+import LikeOrNo from './components/LikeOrNo'
 export default {
   name: 'detail',
   props: ['id'],
   components: {
-    author
+    author,
+    LikeOrNo
   },
   data () {
     return {
